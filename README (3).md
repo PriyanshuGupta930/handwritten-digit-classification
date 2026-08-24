@@ -1,215 +1,129 @@
-# Handwritten Digit Classification using ANN
+# Handwritten Digit Classification using Artificial Neural Network
 
-## Project Overview
+A handwritten digit classification project using an **Artificial Neural Network (ANN)** to classify grayscale images of digits from **0 to 9** using the MNIST dataset.
 
-This project focuses on classifying handwritten digits from the **MNIST dataset** using an **Artificial Neural Network (ANN)**.
+## Overview
 
-The objective is to build a neural network that can recognize handwritten digits from **0 to 9** based on their pixel values.
-
-The project is implemented in a **Jupyter Notebook** using Python and TensorFlow/Keras.
+The objective of this project is to build and evaluate a feed-forward neural network capable of recognizing handwritten digits. The model uses fully connected Dense layers with **ReLU** activations, **Dropout** regularization, and **Early Stopping** to improve generalization and reduce overfitting.
 
 ## Dataset
 
-The project uses the **MNIST handwritten digit dataset**, which contains:
+The project uses the **MNIST handwritten digit dataset**:
 
-- **60,000** training images
-- **10,000** test images
-- Images of size **28 × 28 pixels**
-- Grayscale images
-- 10 classes representing digits **0–9**
+* 60,000 training images
+* 10,000 test images
+* Image size: 28 × 28 pixels
+* Grayscale images
+* 10 classes: digits 0–9
 
-Each image is represented by 784 pixel values after flattening the 28 × 28 image.
+## Approach
 
-## Technologies Used
+### 1. Data Preprocessing
 
-- Python
-- Jupyter Notebook
-- TensorFlow / Keras
-- NumPy
-- Matplotlib
-- Scikit-learn
+* Loaded the MNIST dataset using TensorFlow/Keras.
+* Visualized sample handwritten digits.
+* Checked the original pixel intensity range of **0–255**.
+* Normalized pixel values to the range **0–1** by dividing by 255.
 
-## Project Workflow
+### 2. ANN Architecture
 
-1. Load the MNIST dataset
-2. Explore and visualize sample images
-3. Normalize pixel values
-4. Build the Artificial Neural Network
-5. Compile the model
-6. Train the model
-7. Evaluate performance on the test dataset
-8. Analyze training and validation performance
-9. Generate classification metrics
-10. Visualize the confusion matrix
-11. Analyze correct and incorrect predictions
-12. Save the trained model
-
-## Data Preprocessing
-
-The original pixel values range from **0 to 255**.
-
-To normalize the data, pixel values are divided by 255 so that they fall between **0 and 1**.
-
-```python
-X_train = X_train / 255.0
-X_test = X_test / 255.0
-```
-
-## Model Architecture
-
-The ANN consists of the following layers:
-
-| Layer | Details |
-|---|---|
-| Input | 28 × 28 grayscale image |
-| Flatten | Converts image into 784 features |
-| Hidden Layer 1 | 128 neurons, ReLU activation |
-| Hidden Layer 2 | 64 neurons, ReLU activation |
-| Output Layer | 10 neurons, Softmax activation |
-
-The overall architecture is:
+The neural network consists of:
 
 ```text
-28 × 28 Image
-     ↓
-  Flatten
-     ↓
-784 Features
-     ↓
-Dense Layer — 128 neurons + ReLU
-     ↓
-Dense Layer — 64 neurons + ReLU
-     ↓
-Dense Layer — 10 neurons + Softmax
+Input Image (28 × 28)
+        ↓
+Flatten
+        ↓
+Dense (128 neurons, ReLU)
+        ↓
+Dropout (30%)
+        ↓
+Dense (64 neurons, ReLU)
+        ↓
+Dropout (20%)
+        ↓
+Dense (10 neurons, Softmax)
 ```
 
-## Model Compilation
+The model contains **109,386 trainable parameters**.
 
-The model uses:
+### 3. Model Training
 
-- **Optimizer:** Adam
-- **Loss Function:** Sparse Categorical Crossentropy
-- **Evaluation Metric:** Accuracy
+* Optimizer: **Adam**
+* Loss function: **Sparse Categorical Crossentropy**
+* Metric: **Accuracy**
+* Maximum epochs: **25**
+* Validation split: **20%**
+* Early Stopping based on validation loss
+* Patience: **3 epochs**
+* Best model weights are restored after training
 
-```python
-model.compile(
-    optimizer='adam',
-    loss='sparse_categorical_crossentropy',
-    metrics=['accuracy']
-)
-```
+Dropout and Early Stopping were introduced to control overfitting observed during the initial training experiments.
 
-## Model Training
+## Results
 
-The ANN is trained for **25 epochs** with **20% of the training data used for validation**.
+The final ANN achieved:
 
-```python
-history = model.fit(
-    X_train,
-    y_train,
-    epochs=25,
-    validation_split=0.2
-)
-```
+| Metric        |     Result |
+| ------------- | ---------: |
+| Test Accuracy | **97.48%** |
+| Test Loss     | **0.0783** |
+
+The classification report shows consistently strong performance across all ten digit classes, with precision, recall, and F1-scores generally around **0.97–0.99**.
 
 ## Evaluation
 
-The trained model is evaluated using the MNIST test dataset.
+Model performance was evaluated using:
 
-The project calculates:
+* Test accuracy
+* Classification report
+* Precision
+* Recall
+* F1-score
+* Confusion matrix
+* Training vs. validation accuracy
+* Training vs. validation loss
+* Visualization of correct predictions
+* Visualization of incorrectly classified digits
 
-- Test accuracy
-- Test loss
-- Precision
-- Recall
-- F1-score
-- Confusion matrix
+The project also examines the incorrectly classified test images to understand where the ANN struggles.
 
-The original project reports a test accuracy of **97.37%**. Actual accuracy may vary slightly depending on the training run.
+## Tech Stack
 
-## Visualizations
-
-The notebook includes visualizations for:
-
-- Sample MNIST images
-- Training and validation loss
-- Training and validation accuracy
-- Confusion matrix
-- Correctly classified digits
-- Incorrectly classified digits
-
-These visualizations help analyze how the ANN learns and where it makes classification errors.
-
-## Error Analysis
-
-Incorrect predictions are identified by comparing the predicted labels with the actual labels.
-
-This allows the model's mistakes to be visually inspected and helps identify handwritten digits that may be difficult for the ANN to distinguish.
-
-## Model Output
-
-The model produces 10 probability values using the Softmax output layer, corresponding to digits **0–9**.
-
-The predicted digit is selected as the class with the highest probability.
+* **Python**
+* **TensorFlow / Keras**
+* **NumPy**
+* **Matplotlib**
+* **Scikit-learn**
 
 ## Project Structure
 
 ```text
-handwritten-digit-classification/
-│
-├── Handwritten_Digit_Classification.ipynb
-├── README.md
-└── mnist_model.h5
+├── digit-ann-final.ipynb
+└── README.md
 ```
 
 ## How to Run
 
-### 1. Clone the repository
+1. Clone this repository.
+2. Open `digit-ann-final.ipynb` in Jupyter Notebook, JupyterLab, or Google Colab.
+3. Install the required libraries if needed:
 
 ```bash
-git clone <your-repository-link>
-cd handwritten-digit-classification
+pip install tensorflow numpy matplotlib scikit-learn
 ```
 
-### 2. Install the required libraries
+4. Run the notebook cells sequentially.
+5. The MNIST dataset will be downloaded automatically through TensorFlow/Keras.
 
-```bash
-pip install tensorflow numpy matplotlib scikit-learn jupyter
-```
+## Key Takeaways
 
-### 3. Start Jupyter Notebook
-
-```bash
-jupyter notebook
-```
-
-### 4. Open the notebook
-
-Open:
-
-```text
-Handwritten_Digit_Classification.ipynb
-```
-
-and run the cells sequentially.
-
-## Results
-
-The ANN is able to classify handwritten digits with approximately **97% test accuracy**.
-
-The notebook also provides a detailed view of model performance through training curves, classification metrics, a confusion matrix, and visual inspection of misclassified images.
+* Built a complete ANN pipeline for handwritten digit classification.
+* Applied pixel normalization to improve model training.
+* Used Dropout and Early Stopping to reduce overfitting.
+* Achieved **97.48% accuracy** on the unseen MNIST test set.
+* Used multiple evaluation techniques to analyze model performance and classification errors.
 
 ## Future Improvements
 
-Possible improvements include:
-
-- Experimenting with different numbers of hidden layers and neurons
-- Trying different optimizers
-- Hyperparameter tuning
-- Adding dropout for regularization
-- Comparing the ANN with a Convolutional Neural Network (CNN)
-- Improving performance through further model experimentation
-
-## License
-
-This project is intended for educational and learning purposes.
+The current project uses a fully connected ANN. Performance could potentially be improved further by exploring **Convolutional Neural Networks (CNNs)**, which are particularly well suited for image-based classification tasks.
